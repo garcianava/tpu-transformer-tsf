@@ -7,7 +7,7 @@ from absl import flags
 from absl import app
 
 # ToDo: pass this code to the setup.py file of the final module!!!
-# temporarily solved: added cbidmltsf dir to PYTHONPATH by exporting in .bashrc!!!
+# temporarily solved: added BUCKET_NAME dir to PYTHONPATH by exporting in .bashrc!!!
 
 # uncomment the following two lines if using Abseil Flags to pass hyperparameters
 # from configs import common_hparams_flags
@@ -718,7 +718,7 @@ def main(unused_argv):
     #     DMSLSTM_CFG['model_dir'] = FLAGS.model_dir
 
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket('cbidmltsf')
+    bucket = storage_client.get_bucket('YOUR_BUCKET_NAME')
 
     # build a blob with the configuration file
     blob = bucket.blob('parameters/{}'.format(FLAGS.config_json_file))
@@ -732,7 +732,7 @@ def main(unused_argv):
     # get the experiment identifier
     experiment_id = FLAGS.config_json_file.replace('.json', '')
     # use experiment identifier and execution number to build the model directory
-    model_dir = 'gs://cbidmltsf/models/{}_{:02d}'.format(experiment_id,
+    model_dir = 'gs://YOUR_BUCKET_NAME/models/{}_{:02d}'.format(experiment_id,
                                                          FLAGS.execution)
 
     # temporarily pass model_dir to the configuration dictionary,
