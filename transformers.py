@@ -449,50 +449,6 @@ class DecoderLayer(tf.keras.layers.Layer):
         return out3
 
 
-class ARDecoderLayer(tf.keras.layers.Layer):
-    def __init__(self, d_model, num_heads, dff, dropout=0.1):
-        super(ARDecoderLayer, self).__init__()
-
-        # self.mha1 = MultiHeadAttention(d_model=d_model, num_heads)
-        # adjust to use the older implementation of MHA
-        self.mha1 = MultiHeadAttention(head_size=int(d_model / num_heads),
-                                       num_heads=num_heads,
-                                       # do not assign output_size,
-                                       # project input to required d_model instead
-                                       # (do it before entering the decoder object)
-                                       # output_size=d_model,
-                                       # ToDo: verify attention coefficients implementation
-                                       return_attn_coef=False)
-
-        self.ffn = point_wise_feed_forward_network(d_model, dff)
-
-        self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
-        self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
-
-        self.dropout1 = tf.keras.layers.Dropout(dropout)
-        self.dropout2 = tf.keras.layers.Dropout(dropout)
-
-    def call(self, x, training, look_ahead_mask):
-        attn1 = self.mha1(inputs=[x, x, x],
-                          mask=look_ahead_mask)
-        # attn1 has shape (batch_size, no_targets, d_model)
-
-        attn1 = self.dropout1(attn1, training=training)
-
-        # skip the encoder-decoder MHA and go directly to the output layer
-        out1 = self.layernorm1(attn1 + x)
-        # out1 has shape(batch_size, no_targets, d_model)
-
-        ffn_output = self.ffn(out1)
-        # ffn_output has shape (batch_size, no_targets, d_model)
-
-        ffn_output = self.dropout2(ffn_output, training=training)
-        out2 = self.layernorm2(ffn_output + out1)
-        # out2 has shape (batch_size, no_targets, d_model)
-
-        return out2
-
-
 # first: test Transformer-encoder as a basic forecaster
 # second: test Transformer-decoder (autoregressive) as a basic forecaster
 class BSCTRFM(object):
