@@ -20,6 +20,7 @@ from tensorflow.contrib.estimator import clip_gradients_by_norm
 
 from google.cloud import storage
 
+# vanilla transformer model
 from forecasters.transformers import BSCTRFM
 
 # uncomment the following two lines if using Abseil Flags to pass hyperparameters
