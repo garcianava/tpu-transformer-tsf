@@ -1,3 +1,7 @@
+# almost three years later... it is important to move the code to the best possible framework for TPU-usage
+# TensorFlow 2, PyTorch, or JAX?
+# 
+
 import os
 import time
 import json

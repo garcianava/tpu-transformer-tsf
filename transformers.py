@@ -1,7 +1,11 @@
 import numpy as np
 import tensorflow.compat.v1 as tf
 
+# almost three years later... it is important to move the code to the best possible framework for TPU-usage
+# TensorFlow 2, PyTorch, or JAX?
+# 
 # required for TFA MultiHeadAttention
+
 import typing
 import warnings
 
